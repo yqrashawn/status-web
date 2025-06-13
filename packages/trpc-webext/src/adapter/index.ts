@@ -21,6 +21,9 @@ import type { Runtime } from 'webextension-polyfill'
 export interface CreateWebExtContextOptions {
   req: Runtime.Port
   res: undefined
+  method: string
+  params: unknown
+  type: ProcedureType
 }
 
 export interface CreateWebExtHandlerOptions<TRouter extends AnyRouter>
@@ -178,6 +181,9 @@ async function handleRegularProcedure<TRouter extends AnyRouter>(
   const ctx = await context.createContext?.({
     req: port,
     res: undefined,
+    method: trpc.params.path,
+    params: input,
+    type: trpc.method as ProcedureType,
   })
 
   const result = await callProcedure({
